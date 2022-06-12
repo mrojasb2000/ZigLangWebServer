@@ -13,7 +13,11 @@ pub fn main() anyerror!void {
     while(true) {
         try stdout.print("Server is running on port, {s}!\n", .{"8080"});
         const connection = try stream_server.accept();
-        try connection.stream.writer().print("Hello world from zig", .{});
-        connection.stream.close();
+        try handler(connection.stream);
     }
+}
+
+fn handler(stream: net.Stream) !void {
+    defer stream.close();
+    try stream.writer().print("Hello world from zig", .{});
 }
